@@ -50,19 +50,22 @@ class MainActivity : AppCompatActivity() {
         val request = EmailRequest(email)
         val call = RetrofitClient.instance.sendEmail(request)
 
-        call.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>)
-            {
+        call.enqueue(object : retrofit2.Callback<ResponseBody> {
+            override fun onResponse(
+                call: retrofit2.Call<ResponseBody>,
+                response: retrofit2.Response<ResponseBody>
+            ) {
                 if (response.isSuccessful) {
                     Toast.makeText(this@MainActivity, "Email sent successfully", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this@MainActivity, "Failed to send email", Toast.LENGTH_SHORT).show()
                 }
             }
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable)
-            {
+
+            override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
                 Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
+
         })
     }
 }
