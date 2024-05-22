@@ -16,10 +16,10 @@ import retrofit2.http.POST
 import javax.security.auth.callback.Callback
 import okhttp3.ResponseBody
 
-class MainActivity : AppCompatActivity() {
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
+class MainActivity : AppCompatActivity()
+{
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
@@ -32,20 +32,20 @@ class MainActivity : AppCompatActivity() {
         var btnEnter : Button = findViewById(R.id.btnEnter)
         btnEnter.setOnClickListener ()
         {
-            val intent = Intent(this, HiDucks::class.java)
-            startActivity(intent)
-
             val postId: EditText = findViewById(R.id.txtEmail)
             val email = postId.text.toString()
 
             if (email.isNotEmpty()) {
-                sendEmail(email)
+                sendEmail(email){
+                    val intent = Intent(this, HiDucks::class.java)
+                    startActivity(intent)
+                }
             } else {
                 Toast.makeText(this, "Please enter an email", Toast.LENGTH_SHORT).show()
             }
         }
     }
-    private fun sendEmail(email: String)
+    private fun sendEmail(email: String, onComplete: () -> Unit)
     {
         val request = EmailRequest(email)
         val call = RetrofitClient.instance.sendEmail(request)
@@ -60,10 +60,12 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this@MainActivity, "Failed to send email", Toast.LENGTH_SHORT).show()
                 }
+                onComplete()
             }
 
             override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
                 Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                onComplete()
             }
 
         })

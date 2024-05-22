@@ -16,6 +16,6 @@ class ApiClient
 
 interface ApiService
 {
-    @POST("post/sendDuckies")
+    @POST("/sendDuckie")
     fun sendEmail(@Body request: EmailRequest): Call<ResponseBody>
 }
